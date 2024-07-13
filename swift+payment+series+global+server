@@ -1,0 +1,128 @@
+import time
+import sys
+
+class PrintColored:
+    DEFAULT = '\033[0m'
+    # Styles
+    BOLD = '\033[1m'
+    ITALIC = '\033[3m'
+    UNDERLINE = '\033[4m'
+    UNDERLINE_THICK = '\033[21m'
+    HIGHLIGHTED = '\033[7m'
+    HIGHLIGHTED_BLACK = '\033[40m'
+    HIGHLIGHTED_RED = '\033[41m'
+    HIGHLIGHTED_GREEN = '\033[42m'
+    HIGHLIGHTED_YELLOW = '\033[43m'
+    HIGHLIGHTED_BLUE = '\033[44m'
+    HIGHLIGHTED_PURPLE = '\033[45m'
+    HIGHLIGHTED_CYAN = '\033[46m'
+    HIGHLIGHTED_GREY = '\033[47m'
+
+    HIGHLIGHTED_GREY_LIGHT = '\033[100m'
+    HIGHLIGHTED_RED_LIGHT = '\033[101m'
+    HIGHLIGHTED_GREEN_LIGHT = '\033[102m'
+    HIGHLIGHTED_YELLOW_LIGHT = '\033[103m'
+    HIGHLIGHTED_BLUE_LIGHT = '\033[104m'
+    HIGHLIGHTED_PURPLE_LIGHT = '\033[105m'
+    HIGHLIGHTED_CYAN_LIGHT = '\033[106m'
+    HIGHLIGHTED_WHITE_LIGHT = '\033[107m'
+
+    STRIKE_THROUGH = '\033[9m'
+    MARGIN_1 = '\033[51m'
+    MARGIN_2 = '\033[52m' # seems equal to MARGIN_1
+    # colors
+    BLACK = '\033[30m'
+    RED_DARK = '\033[31m'
+    GREEN_DARK = '\033[32m'
+    YELLOW_DARK = '\033[33m'
+    BLUE_DARK = '\033[34m'
+    PURPLE_DARK = '\033[35m'
+    CYAN_DARK = '\033[36m'
+    GREY_DARK = '\033[37m'
+
+    BLACK_LIGHT = '\033[90m'
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    PURPLE = '\033[95m'
+    CYAN = '\033[96m'
+    WHITE = '\033[97m'
+
+    def __init__(self):
+        self.print_original = print # old value to the original print function
+        self.current_color = self.DEFAULT
+
+    def __call__(self,
+                 *values: object, sep: str | None = None,
+                 end: str | None = None,
+                 file: str | None = None,
+                 flush: bool = False,
+                 color: str|None = None,
+                 default_color: str|None = None,
+    ):
+        if default_color:
+            self.current_color = default_color
+
+        default = self.current_color
+        if color:
+            values = (color, *values, default)  # wrap the content within a selected color an a default
+        else:
+            values = (*values, default)  # wrap the content within a selected color an a default
+        self.print_original(*values, end=end, file=file, flush=flush)
+
+if __name__ == '__main__':
+    print = PrintColored()
+
+    print("-----------------------------------------welcome to swift----------------------------------------------", color=print.HIGHLIGHTED_GREEN_LIGHT)
+
+    print("Hello world - RED", color=print.RED)
+    print("Hello world - GREEN", color=print.GREEN)
+
+    print("Hello world - WHITE", color=print.WHITE)
+    
+
+
+# Function to create the typewriter effect
+def typewriter_effect(sentence, type_delay, delete_delay):
+    # Loop through each character in the sentence
+    for char in sentence:
+
+        # Write, display and delay
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(0.051)
+
+    # Pause after printing the entire sentence
+    time.sleep(1)
+
+    # Loop to delete the sentence
+    for _ in sentence:
+        # Write backspace, space, delete and delay
+        sys.stdout.write('\b \b')
+        sys.stdout.flush()
+        time.sleep(delete_delay)
+
+# List of sentences to display in typewriter effect
+sentences = [
+    "-----------------------------------------welcome to swift--------------------------------------------",
+#    "This is a console based typewriter effect.",
+#   "Using Python it simulates the appearance of a typewriter."
+]
+
+# Typing and Deleting speed in seconds
+type_delay = 0.05
+delete_delay = 0.01
+
+while True:
+    # Iterate over each sentence in the list
+    for sentence in sentences:
+
+        # Call the typewriter_effect function
+        typewriter_effect(sentence, type_delay, delete_delay)
+
+        # Print a carriage return to overwrite the sentence and 
+        # start the next iteration with a clean console output
+        print('\r', end='')
+        
+print("hellow world")
